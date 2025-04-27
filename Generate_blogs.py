@@ -58,8 +58,7 @@ HUMAN_PROMPT = HumanMessagePromptTemplate.from_template(
 PROMPT = ChatPromptTemplate.from_messages(
     [
         SYSTEM_PROMPT,
-        HUMAN_PROMPT,
-        MessagesPlaceholder(variable_name="history"),
+        HUMAN_PROMPT
     ]
 )
 
@@ -74,12 +73,12 @@ chain = LLMChain(
     memory=None,
 )
 # Generate the blog post
-response = chain.run(transcript=cleaned_transcript)
+response = chain.invoke({"transcript": cleaned_transcript})
 # Print the generated blog post
 print("Generated Blog Post:")
-print(response)
+print(response['text'])
 # Save the generated blog post to a file
 output_file = "generated_blog_post.txt"
 with open(output_file, "w") as f:
-    f.write(response)
+    f.write(response['text'])
 print(f"Blog post saved to '{output_file}'")
