@@ -7,15 +7,15 @@ from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
-from preprocessing import load_transcript, process_transcript
-from content_generation import (
+from modules.preprocessing import load_transcript, process_transcript
+from modules.content_generation import (
     generate_seo_elements,
     generate_faq,
     generate_social_media,
     generate_newsletter,
     extract_quotes
 )
-from generate_blog import generate_blog
+from modules.generate_blog import generate_blog
 
 # Create output directory
 OUTPUT_DIR = Path("output")
@@ -64,7 +64,7 @@ def main():
     use_tavily = bool(os.getenv("TAVILY_API_KEY"))
 
     # Initialize LLM
-    llm = ChatGroq(temperature=0, model_name=model_name)
+    llm = ChatGroq(temperature=0.2, model_name=model_name)
 
     # Create timestamp for output files
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
