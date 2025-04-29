@@ -1,0 +1,315 @@
+/* Base styles and variables */
+:root {
+    --primary-color: #4a6bff;
+    --primary-dark: #3a55c5;
+    --secondary-color: #f8f9fa;
+    --text-color: #333;
+    --light-text: #666;
+    --border-color: #e0e0e0;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+    --border-radius: 8px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: #f5f7fa;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* Header styles */
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    color: var(--light-text);
+    font-size: 1.1rem;
+}
+
+/* Section styles */
+section {
+    margin-bottom: 2rem;
+    transition: var(--transition);
+}
+
+.hidden {
+    display: none;
+}
+
+/* Upload section */
+.upload-container {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--box-shadow);
+}
+
+.upload-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    color: var(--primary-color);
+}
+
+.upload-container h2 {
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.upload-container p {
+    color: var(--light-text);
+    margin-bottom: 1.5rem;
+}
+
+/* File input styling */
+.file-input-container {
+    margin-bottom: 1.5rem;
+}
+
+input[type="file"] {
+    position: absolute;
+    left: -9999px;
+}
+
+.file-label {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.file-label:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Options styling */
+.options-container {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.options-container h3 {
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.option-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    margin-right: 0.5rem;
+}
+
+.option input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+/* Button styling */
+.upload-btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+    font-size: 1rem;
+}
+
+.upload-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+.secondary-btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+    font-size: 1rem;
+}
+
+.secondary-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Processing section */
+.processing-container {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--box-shadow);
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border-left-color: var(--primary-color);
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1.5rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+#processing-status {
+    margin-top: 1rem;
+    font-style: italic;
+    color: var(--light-text);
+}
+
+/* Results section */
+.results-container {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--box-shadow);
+}
+
+#files-container {
+    margin: 1.5rem 0;
+    text-align: left;
+}
+
+.file-card {
+    background-color: var(--secondary-color);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.file-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.file-card p {
+    font-size: 0.9rem;
+    color: var(--light-text);
+}
+
+.file-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* Error section */
+.error-container {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--box-shadow);
+}
+
+.error-icon {
+    font-size: 3rem;
+    color: var(--error-color);
+    margin-bottom: 1rem;
+}
+
+#error-message {
+    margin: 1rem 0 1.5rem;
+    color: var(--light-text);
+}
+
+/* Footer styles */
+footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--light-text);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .upload-container,
+    .processing-container,
+    .results-container,
+    .error-container {
+        padding: 1.5rem;
+    }
+    
+    .option-group {
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .upload-btn,
+    .secondary-btn,
+    .file-label {
+        width: 100%;
+    }
+    
+    .file-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .file-card .file-btn {
+        margin-top: 1rem;
+        width: 100%;
+    }
+}

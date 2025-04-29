@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podcast to Blog Generator</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Podcast to Blog Generator</h1>
+            <p>Transform your podcast audio into beautiful blog content</p>
+        </header>
+
+        <main>
+            <section id="upload-section">
+                <div class="upload-container">
+                    <div class="upload-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <h2>Upload Your Audio File</h2>
+                    <p>Drag and drop or click to select (Max: 20MB)</p>
+                    <form id="upload-form">
+                        <div class="file-input-container">
+                            <input type="file" id="audio-file" name="file" accept=".mp3,.wav,.m4a,.ogg" required>
+                            <label for="audio-file" class="file-label">Choose a file</label>
+                        </div>
+                        
+                        <div class="options-container">
+                            <h3>Content Options</h3>
+                            <div class="option-group">
+                                <div class="option">
+                                    <input type="checkbox" id="blog" name="content_types" value="blog" checked>
+                                    <label for="blog">Blog Post</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="seo" name="content_types" value="seo" checked>
+                                    <label for="seo">SEO Elements</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="faq" name="content_types" value="faq" checked>
+                                    <label for="faq">FAQ</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="social" name="content_types" value="social" checked>
+                                    <label for="social">Social Media</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="newsletter" name="content_types" value="newsletter" checked>
+                                    <label for="newsletter">Newsletter</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="quotes" name="content_types" value="quotes" checked>
+                                    <label for="quotes">Quotes</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" id="submit-btn" class="upload-btn">Generate Content</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="processing-section" class="hidden">
+                <div class="processing-container">
+                    <div class="spinner"></div>
+                    <h2>Processing Your Audio</h2>
+                    <p>This may take several minutes depending on file size and content options.</p>
+                    <div id="processing-status">Transcribing audio...</div>
+                </div>
+            </section>
+
+            <section id="results-section" class="hidden">
+                <div class="results-container">
+                    <h2>Generated Content</h2>
+                    <p>Your content has been successfully generated!</p>
+                    <div id="files-container">
+                        <!-- Files will be inserted here dynamically -->
+                    </div>
+                    <button id="generate-new" class="secondary-btn">Generate New Content</button>
+                </div>
+            </section>
+
+            <section id="error-section" class="hidden">
+                <div class="error-container">
+                    <div class="error-icon">❌</div>
+                    <h2>Oops! Something went wrong</h2>
+                    <p id="error-message"></p>
+                    <button id="try-again" class="secondary-btn">Try Again</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2025 Podcast to Blog Generator</p>
+        </footer>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
