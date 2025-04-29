@@ -1,5 +1,6 @@
-openai-whisper
 langchain
 langchain[groq]
 python-dotenv
 groq
+fastapi 
+uvicorn 
