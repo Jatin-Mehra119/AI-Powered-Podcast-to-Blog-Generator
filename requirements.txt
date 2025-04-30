@@ -1,6 +1,8 @@
 langchain
-langchain[groq]
+langchain-groq
+langchain_community
 python-dotenv
 groq
-fastapi 
-uvicorn 
+fastapi
+uvicorn
+python-multipart
