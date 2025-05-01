@@ -6,3 +6,4 @@ groq
 fastapi
 uvicorn
 python-multipart
+pydantic

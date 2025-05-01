@@ -1,7 +1,10 @@
 import json
+import re
 from langchain.prompts import ChatPromptTemplate
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, List
+
+from modules.models import ContentOutput, SeoElements, FaqItem, SocialMediaPosts, BlogQuote
 
 logger = logging.getLogger("content_generation")
 
@@ -20,11 +23,21 @@ def generate_seo_elements(llm, blog_content: str) -> Dict[str, Any]:
     ])
     chain = seo_prompt | llm
     result = chain.invoke({"blog_content": blog_content})
+    
     try:
-        # Fix: Handle AIMessage object correctly
+        # Extract response text
         response_text = result.content if hasattr(result, 'content') else str(result)
+        
+        # Clean up the response to extract just the JSON
+        json_match = re.search(r'```json\s*(\{.*?\})\s*```', response_text, re.DOTALL)
+        if json_match:
+            response_text = json_match.group(1)
+        
         parsed_json = json.loads(response_text)
-        return parsed_json
+        
+        # Create a Pydantic model to validate the structure
+        seo = SeoElements(**parsed_json)
+        return seo.model_dump()
     except json.JSONDecodeError:
         logger.error("LLM response is not valid JSON")
         return {"error": "Invalid JSON format", "raw_response": response_text}
@@ -42,14 +55,33 @@ def generate_faq(llm, transcript: str) -> str:
     ])
     chain = faq_prompt | llm
     result = chain.invoke({"transcript": transcript})
+    
     try:
+        # Extract content from result
         content = result.content if hasattr(result, 'content') else str(result)
-        faqs = json.loads(content)
-        md_content = "\n".join([f"**Q: {faq['question']}**\nA: {faq['answer']}\n" for faq in faqs])
+        
+        # Clean up the response to extract just the JSON array
+        json_match = re.search(r'```json\s*(\[.*?\])\s*```', content, re.DOTALL)
+        if json_match:
+            content = json_match.group(1)
+            
+        # Parse the JSON and validate with Pydantic
+        faq_items = json.loads(content)
+        
+        # Convert to FAQ items and validate
+        validated_faqs = [FaqItem(**item) for item in faq_items]
+        
+        # Format as markdown
+        md_content = ""
+        for faq in validated_faqs:
+            md_content += f"## {faq.question}\n\n{faq.answer}\n\n"
+            
         return md_content
     except Exception as e:
         logger.error(f"Error generating FAQ: {e}")
-        return str(result)
+        # Create clean output with the error included
+        output = ContentOutput.from_llm_response(result)
+        return output.content
 
 def generate_social_media(llm, blog_content: str) -> str:
     logger.info("Generating social media posts...")
@@ -65,18 +97,34 @@ def generate_social_media(llm, blog_content: str) -> str:
     ])
     chain = social_prompt | llm
     result = chain.invoke({"blog_content": blog_content})
+    
     try:
+        # Extract content from result
         content = result.content if hasattr(result, 'content') else str(result)
-        social_posts = json.loads(content)
+        
+        # Clean up the response to extract just the JSON
+        json_match = re.search(r'```json\s*(\{.*?\})\s*```', content, re.DOTALL)
+        if json_match:
+            content = json_match.group(1)
+            
+        # Parse the JSON and validate with Pydantic
+        social_data = json.loads(content)
+        social_posts = SocialMediaPosts(**social_data)
+        
+        # Format as markdown
         md_content = (
-            f"**Twitter Post:**\n{social_posts['twitter']}\n\n"
-            f"**LinkedIn Post:**\n{social_posts['linkedin']}\n\n"
-            f"**Instagram Caption:**\n{social_posts['instagram']}\n"
+            f"# Social Media Content\n\n"
+            f"## Twitter Post\n\n{social_posts.twitter}\n\n"
+            f"## LinkedIn Post\n\n{social_posts.linkedin}\n\n"
+            f"## Instagram Caption\n\n{social_posts.instagram}\n"
         )
+        
         return md_content
     except Exception as e:
         logger.error(f"Error generating social media posts: {e}")
-        return str(result)
+        # Create clean output with the error included
+        output = ContentOutput.from_llm_response(result)
+        return output.content
 
 def generate_newsletter(llm, blog_content: str) -> str:
     logger.info("Generating newsletter...")
@@ -85,20 +133,49 @@ def generate_newsletter(llm, blog_content: str) -> str:
     ])
     chain = newsletter_prompt | llm
     result = chain.invoke({"blog_content": blog_content})
-    return result.content if hasattr(result, 'content') else str(result)
+    
+    # Create clean output
+    output = ContentOutput.from_llm_response(result)
+    
+    # Format as markdown
+    md_content = f"# Newsletter Summary\n\n{output.content}"
+    return md_content
 
 def extract_quotes(llm, transcript: str) -> str:
     logger.info("Extracting quotes...")
     quote_prompt = ChatPromptTemplate.from_messages([
-        ("human", "Return a JSON list of 3-5 memorable quotes from this transcript: {transcript}")
+        ("human", """
+        Extract 3-5 memorable quotes from this transcript and return them as a JSON array.
+        Each quote should have a "quote" field with the actual quote text and a "speaker" field 
+        (use "The Author" if speaker is unknown):
+        {transcript}
+        """)
     ])
     chain = quote_prompt | llm
     result = chain.invoke({"transcript": transcript})
+    
     try:
+        # Extract content from result
         content = result.content if hasattr(result, 'content') else str(result)
-        quotes = json.loads(content)
-        md_content = "\n".join([f"- {quote}" for quote in quotes])
+        
+        # Clean up the response to extract just the JSON array
+        json_match = re.search(r'```json\s*(\[.*?\])\s*```', content, re.DOTALL)
+        if json_match:
+            content = json_match.group(1)
+            
+        # Parse the JSON and validate with Pydantic
+        quotes_data = json.loads(content)
+        validated_quotes = [BlogQuote(**quote) for quote in quotes_data]
+        
+        # Format as markdown
+        md_content = "# Memorable Quotes\n\n"
+        for quote in validated_quotes:
+            speaker = quote.speaker if quote.speaker else "Unknown"
+            md_content += f"> {quote.quote}\n>\n> — {speaker}\n\n"
+            
         return md_content
     except Exception as e:
         logger.error(f"Error extracting quotes: {e}")
-        return str(result)
+        # Create clean output with the error included
+        output = ContentOutput.from_llm_response(result)
+        return output.content

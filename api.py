@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-# Import your existing modules
+# Import existing modules
 from modules.preprocessing import load_transcript, process_transcript
 from modules.content_generation import (
     generate_seo_elements,
@@ -158,9 +158,24 @@ def save_output(content, filename, format="md"):
     with open(filepath, "w", encoding="utf-8") as f:
         if format == "json":
             import json
-            json.dump(content, f, indent=2)
+            # If content is already a dict, dump it directly
+            if isinstance(content, dict):
+                json.dump(content, f, indent=2)
+            else:
+                # Try to convert string to JSON if it's not already a dict
+                try:
+                    json_content = json.loads(content) if isinstance(content, str) else content
+                    json.dump(json_content, f, indent=2)
+                except Exception as e:
+                    logger.error(f"Error converting content to JSON: {e}")
+                    # Fallback: write as string
+                    f.write(str(content))
         else:
-            f.write(str(content))
+            # For markdown and other text formats, ensure clean string output
+            if isinstance(content, str):
+                f.write(content)
+            else:
+                f.write(str(content))
     logger.info(f"Saved {filename}.{format}")
     return str(filepath)
 
