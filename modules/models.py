@@ -1,6 +1,7 @@
-from typing import Dict, List, Optional, Any
+from typing import List, Optional
 from pydantic import BaseModel, Field
 
+# Simple schema for the LLM response
 
 class SeoElements(BaseModel):
     """Model for SEO elements of a blog post"""

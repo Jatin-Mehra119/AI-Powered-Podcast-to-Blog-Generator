@@ -2,13 +2,21 @@ import json
 import re
 from langchain.prompts import ChatPromptTemplate
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 from modules.models import ContentOutput, SeoElements, FaqItem, SocialMediaPosts, BlogQuote
 
 logger = logging.getLogger("content_generation")
 
 def generate_seo_elements(llm, blog_content: str) -> Dict[str, Any]:
+    """
+    Generate SEO elements for a blog post using an LLM.
+    Args:
+        llm: The language model to use for generation.
+        blog_content: The content of the blog post.
+    Returns:
+        A dictionary containing the SEO elements: title, meta_description, tags, and keywords.
+    """
     logger.info("Generating SEO elements...")
     seo_prompt = ChatPromptTemplate.from_messages([
         ("human", """
@@ -46,6 +54,14 @@ def generate_seo_elements(llm, blog_content: str) -> Dict[str, Any]:
         return {"error": str(e), "raw_response": response_text}
 
 def generate_faq(llm, transcript: str) -> str:
+    """
+    Generate FAQs from a transcript using an LLM.
+    Args:
+        llm: The language model to use for generation.
+        transcript: The transcript from which to generate FAQs.
+    Returns:
+        A string containing the formatted FAQs in markdown.
+    """
     logger.info("Generating FAQ...")
     faq_prompt = ChatPromptTemplate.from_messages([
         ("human", """
@@ -84,6 +100,14 @@ def generate_faq(llm, transcript: str) -> str:
         return output.content
 
 def generate_social_media(llm, blog_content: str) -> str:
+    """
+    Generate social media posts based on a blog post using an LLM.
+    Args:
+        llm: The language model to use for generation.
+        blog_content: The content of the blog post.
+    Returns:
+        A string containing the formatted social media posts in markdown.
+    """
     logger.info("Generating social media posts...")
     social_prompt = ChatPromptTemplate.from_messages([
         ("human", """
@@ -127,6 +151,14 @@ def generate_social_media(llm, blog_content: str) -> str:
         return output.content
 
 def generate_newsletter(llm, blog_content: str) -> str:
+    """
+    Generate a newsletter summary based on a blog post using an LLM.
+    Args:
+        llm: The language model to use for generation.
+        blog_content: The content of the blog post.
+    Returns:
+        A string containing the formatted newsletter summary in markdown.
+    """
     logger.info("Generating newsletter...")
     newsletter_prompt = ChatPromptTemplate.from_messages([
         ("human", "Return a 100-150 word summary of this blog post for a newsletter: {blog_content}")
@@ -142,6 +174,14 @@ def generate_newsletter(llm, blog_content: str) -> str:
     return md_content
 
 def extract_quotes(llm, transcript: str) -> str:
+    """
+    Extract memorable quotes from a transcript using an LLM.
+    Args:
+        llm: The language model to use for generation.
+        transcript: The transcript from which to extract quotes.
+    Returns:
+        A string containing the formatted quotes in markdown.
+    """
     logger.info("Extracting quotes...")
     quote_prompt = ChatPromptTemplate.from_messages([
         ("human", """

@@ -7,6 +7,16 @@ import logging
 logger = logging.getLogger("blog_generator")
 
 def generate_blog(transcript: str, llm, use_tavily: bool = True, max_length: int = 10000) -> str:
+    """
+    Generate a blog post from a transcript using an LLM.
+    Args:
+        transcript: The transcript of the audio.
+        llm: The language model to use for generation.
+        use_tavily: Whether to use Tavily for additional research.
+        max_length: Maximum length of the transcript chunk for processing.
+    Returns:
+        The generated blog post as a string.
+    """
     # Set up tools and prompt
     tools = [TavilySearchResults(max_results=5)] if use_tavily else []
     search_instruction = (
