@@ -1,3 +1,26 @@
+#!/usr/bin/env python3
+"""
+Content Generation Module
+
+This module handles the generation of various content types from podcast transcripts
+and blog posts using Large Language Models (LLMs). It provides specialized functions
+for creating:
+
+1. SEO elements - titles, meta descriptions, tags, and keywords
+2. Frequently Asked Questions (FAQs)
+3. Social media posts for Twitter, LinkedIn, and Instagram
+4. Newsletter summaries
+5. Quotable highlights from transcripts
+
+Each function uses carefully crafted prompts to generate high-quality content
+optimized for its specific purpose and platform.
+
+Dependencies:
+- langchain: For prompt templating and LLM interactions
+- Pydantic models: For data validation and JSON structure
+- logging: For tracking the generation process
+"""
+
 import json
 import re
 from langchain.prompts import ChatPromptTemplate
@@ -11,11 +34,25 @@ logger = logging.getLogger("content_generation")
 def generate_seo_elements(llm, blog_content: str) -> Dict[str, Any]:
     """
     Generate SEO elements for a blog post using an LLM.
+    
+    This function creates search engine optimization (SEO) elements including
+    a title, meta description, tags, and keywords that are optimized for 
+    discoverability based on the blog content.
+    
     Args:
-        llm: The language model to use for generation.
-        blog_content: The content of the blog post.
+        llm: The language model instance to use for generation.
+        blog_content (str): The full content of the blog post.
+        
     Returns:
-        A dictionary containing the SEO elements: title, meta_description, tags, and keywords.
+        Dict[str, Any]: A dictionary containing the following SEO elements:
+            - title: An SEO-friendly title (under 60 characters)
+            - meta_description: A meta description (under 160 characters)
+            - tags: A list of 5-10 tags
+            - keywords: A list of 5-7 keywords
+            
+    Raises:
+        JSONDecodeError: If the LLM response cannot be parsed as valid JSON
+        Exception: For other processing errors
     """
     logger.info("Generating SEO elements...")
     seo_prompt = ChatPromptTemplate.from_messages([
@@ -55,12 +92,30 @@ def generate_seo_elements(llm, blog_content: str) -> Dict[str, Any]:
 
 def generate_faq(llm, transcript: str) -> str:
     """
-    Generate FAQs from a transcript using an LLM.
+    Generate Frequently Asked Questions (FAQs) from a podcast transcript.
+    
+    This function identifies key topics and questions from the transcript
+    and creates a set of Q&A pairs that capture the main insights.
+    The output is formatted as markdown for easy integration into websites.
+    
     Args:
-        llm: The language model to use for generation.
-        transcript: The transcript from which to generate FAQs.
+        llm: The language model instance to use for generation.
+        transcript (str): The transcript text from which to generate FAQs.
+        
     Returns:
-        A string containing the formatted FAQs in markdown.
+        str: A markdown-formatted string containing 3-5 FAQ items, each with
+             a question heading and detailed answer paragraph.
+             
+    Example output:
+        ## What are the benefits of meditation?
+        
+        Research shows that regular meditation can reduce stress, improve focus,
+        and enhance overall well-being. Our guest explained that just 10 minutes
+        per day can make a significant difference in mental clarity.
+        
+        ## How can beginners start a meditation practice?
+        
+        ...
     """
     logger.info("Generating FAQ...")
     faq_prompt = ChatPromptTemplate.from_messages([
@@ -101,12 +156,25 @@ def generate_faq(llm, transcript: str) -> str:
 
 def generate_social_media(llm, blog_content: str) -> str:
     """
-    Generate social media posts based on a blog post using an LLM.
+    Generate social media posts for multiple platforms based on a blog post.
+    
+    Creates tailored content for three different social media platforms, each
+    optimized for the platform's character limits and audience expectations:
+    - Twitter/X: Short, engaging post under 280 characters
+    - LinkedIn: Professional, detailed post of 200-300 words
+    - Instagram: Visual-friendly caption with appropriate length
+    
     Args:
-        llm: The language model to use for generation.
-        blog_content: The content of the blog post.
+        llm: The language model instance to use for generation.
+        blog_content (str): The content of the blog post to transform.
+        
     Returns:
-        A string containing the formatted social media posts in markdown.
+        str: A markdown-formatted string containing the three social media posts,
+             organized under appropriate headings.
+             
+    Note:
+        The output is structured to make it easy for users to copy and paste
+        each platform's content separately.
     """
     logger.info("Generating social media posts...")
     social_prompt = ChatPromptTemplate.from_messages([
@@ -152,12 +220,24 @@ def generate_social_media(llm, blog_content: str) -> str:
 
 def generate_newsletter(llm, blog_content: str) -> str:
     """
-    Generate a newsletter summary based on a blog post using an LLM.
+    Generate a concise newsletter summary from a blog post.
+    
+    Creates a condensed version of the blog content that's suitable for
+    email newsletters, focusing on the core message and key takeaways.
+    The summary maintains the tone and perspective of the original post
+    while being brief enough for email consumption.
+    
     Args:
-        llm: The language model to use for generation.
-        blog_content: The content of the blog post.
+        llm: The language model instance to use for generation.
+        blog_content (str): The content of the blog post to summarize.
+        
     Returns:
-        A string containing the formatted newsletter summary in markdown.
+        str: A markdown-formatted string containing a 100-150 word newsletter
+             summary with an appropriate heading.
+             
+    Note:
+        The summary is intentionally kept short to maximize engagement
+        in email format, where attention spans are typically shorter.
     """
     logger.info("Generating newsletter...")
     newsletter_prompt = ChatPromptTemplate.from_messages([
@@ -175,12 +255,31 @@ def generate_newsletter(llm, blog_content: str) -> str:
 
 def extract_quotes(llm, transcript: str) -> str:
     """
-    Extract memorable quotes from a transcript using an LLM.
+    Extract memorable quotable content from a podcast transcript.
+    
+    Analyzes the transcript to identify insightful, powerful, or otherwise
+    noteworthy quotes that capture key moments. These quotes can be used
+    for promotional materials, social media highlights, or as callouts
+    within the blog post itself.
+    
     Args:
-        llm: The language model to use for generation.
-        transcript: The transcript from which to extract quotes.
+        llm: The language model instance to use for generation.
+        transcript (str): The transcript from which to extract quotes.
+        
     Returns:
-        A string containing the formatted quotes in markdown.
+        str: A markdown-formatted string containing 3-5 quotes with attributed
+             speakers, formatted in blockquote style.
+             
+    Example output:
+        # Memorable Quotes
+        
+        > The key to innovation isn't having new ideas, it's connecting existing ones.
+        >
+        > — Jane Smith
+        
+        > When we focus on user problems instead of technology, that's when the magic happens.
+        >
+        > — John Doe
     """
     logger.info("Extracting quotes...")
     quote_prompt = ChatPromptTemplate.from_messages([
