@@ -67,7 +67,7 @@ This project evolved through several development stages:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/AI-Powered-Podcast-to-Blog-Generator.git
+git clone https://github.com/Jatin-Mehra119/AI-Powered-Podcast-to-Blog-Generator.git
 cd AI-Powered-Podcast-to-Blog-Generator
 ```
 
@@ -111,9 +111,9 @@ The application is structured as follows:
 - `api.py`: FastAPI server implementation
 - `main.py`: Command-line interface
 - `modules/`: Core functionality modules
-  - `preprocessing.py`: Audio transcription and cleaning
-  - `generate_blog.py`: Blog post generation logic
-  - `content_generation.py`: Other content type generators
+- `preprocessing.py`: Audio transcription and cleaning
+- `generate_blog.py`: Blog post generation logic
+- `content_generation.py`: Other content type generators
 - `frontend/`: Web interface files (HTML, CSS, JS)
 - `output/`: Generated content files
 - `temp/`: Temporary storage for uploaded files
