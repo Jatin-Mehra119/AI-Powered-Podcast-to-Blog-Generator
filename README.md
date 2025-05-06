@@ -1,4 +1,7 @@
 # AI-Powered Podcast to Blog Generator
+![podcast to blogs](https://github.com/user-attachments/assets/2b63a325-5e25-449b-a152-00c42dd45120)
+
+[Live Demo](https://jatinmehra-ai-powered-podcast-to-blog-generator.hf.space/)
 
 A powerful tool that automatically converts podcast audio into comprehensive blog content and other marketing assets using AI.
 
